@@ -6,6 +6,6 @@ public class TestRunner {
 
     public static void main( String[] args ) {
         SimpleJasonAgent myAgent = new SimpleJasonAgent();
-        //myAgent.run();
+        myAgent.run();
     }
 }

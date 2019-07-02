@@ -40,7 +40,7 @@ public class SimpleJasonAgent extends AgArch {
 		try {
 			Agent ag = new Agent();
 			new TransitionSystem(ag, null, null, this);
-			InputStream aslFile = ResourceManager.getResourceStream("/asl/" + "ugv" + ".asl");
+			InputStream aslFile = ResourceManager.getResourceStream("/asl/" + "test" + ".asl");
 			ag.initAg();
 			ag.load(aslFile, "ugv");
 		} catch (Exception e) {
@@ -55,7 +55,8 @@ public class SimpleJasonAgent extends AgArch {
 		try {
 			String line;
 			// Open the file
-			reader = new BufferedReader(new FileReader(testingFilename));
+			reader = ResourceManager.getResourceBufferedReader(testingFilename);
+			//reader = new BufferedReader(new FileReader(testingFilename));
 
 			// Load the perceptions
 			while ((line = reader.readLine()) != null) {
