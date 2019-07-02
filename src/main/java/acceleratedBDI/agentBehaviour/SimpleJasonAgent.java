@@ -8,8 +8,6 @@ import jason.asSyntax.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
-
 
 /**
  * Example of an agent that only uses Jason BDI engine. It runs without all
@@ -18,6 +16,8 @@ import java.util.logging.*;
  * The class must extend AgArch class to be used by the Jason engine.
  */
 public class SimpleJasonAgent extends AgArch {
+	private Queue<String> perceptionList;		// List of perceptions for this agent (from a file)
+
 	//private static final String broadcastID = "BROADCAST";
 	
 	//private String name;
@@ -36,34 +36,39 @@ public class SimpleJasonAgent extends AgArch {
 	
 	public SimpleJasonAgent() {
 
-		// Set parameters for the first perception ID
-		//this.lastPerceptionId = 0;
-
-		//this.firstPerception = true;
-		//this.perceptHistory = new PerceptionHistory();
-		//agentState = modelAgentState;
-		//running = false;
-
-		// set up the Jason agent
+		// Set up the Jason agent
 		try {
 			Agent ag = new Agent();
 			new TransitionSystem(ag, null, null, this);
-			//this.name = id;
 			InputStream aslFile = ResourceManager.getResourceStream("/asl/" + "ugv" + ".asl");
 			ag.initAg();
 			ag.load(aslFile, "ugv");
 		} catch (Exception e) {
-			//logger.log(Level.SEVERE, "Init error", e);
 			System.out.println(e.toString());
 		}
 		
-		// Set up the perception logfile
-		//try {
-		//	this.perceptionLogFile = ResourceManager.createOutputFile("PerceptionLog_" + this.name + ".log");
-		//} catch (Exception e) {
-			// TODO Auto-generated catch block
-		//	e.printStackTrace();
-		//}
+		// Set up the perception input file
+		String testingFilename = "/perceptions/" + "testPercepts" + ".txt";		// File name for the test perceptions
+		BufferedReader reader;
+		this.perceptionList = new LinkedList<>();
+
+		try {
+			String line;
+			// Open the file
+			reader = new BufferedReader(new FileReader(testingFilename));
+
+			// Load the perceptions
+			while ((line = reader.readLine()) != null) {
+				this.perceptionList.add(line);
+			}
+
+			// Done reading the file
+			reader.close();
+			System.out.println("Finished going through testing file.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		// Set up the cycle length logfile
 		//this.lastCycleTimeStamp = 0;
@@ -80,7 +85,7 @@ public class SimpleJasonAgent extends AgArch {
 	 */
 	public void run(){
 		try {
-			while (isRunning()) {
+			while (isRunning() && !this.perceptionList.isEmpty()) {
 				// calls the Jason engine to perform one reasoning cycle
 				getTS().reasoningCycle();
 			}
@@ -92,12 +97,23 @@ public class SimpleJasonAgent extends AgArch {
 	// this method just add some perception for the agent
 	@Override
 	public List<Literal> perceive() {
-		List<Literal> litteralList = new ArrayList<Literal>();
-		litteralList.add(Literal.parseLiteral("fact(5)"));
+		List<Literal> literalList = new ArrayList<Literal>();
 
-		//Todo: Make this parse lines from a file (or randomly generate perceptions)
+		// Get the current perception
+		String nextPercept = this.perceptionList.poll();
 
-		return litteralList;
+		if (nextPercept != null) {
+			// Process the perception
+			for (String item: nextPercept.split("\\s+")) { //split around any number of whitespace/tabs
+				literalList.add(Literal.parseLiteral(item));
+			}
+		} else {
+			// All done
+			System.out.println("All perceptions Processed.");
+		}
+
+		//Collection<Literal> returnList = super.getPercepts(ag);
+		return literalList;
 	}
 	
 	/**
