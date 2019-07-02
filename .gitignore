@@ -10,3 +10,7 @@ gradlew
 gradlew\.bat
 
 settings\.gradle
+
+*.class
+
+out/
