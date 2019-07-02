@@ -73,156 +73,121 @@ public class SimpleJasonAgent extends AgArch {
 		//	// TODO Auto-generated catch block
 		//	e.printStackTrace();
 		//}
-		
 	}
 	
 	public void run(){
 		//logger.log(Level.FINE, "I'm a Jason Agent and I'm starting");
-		
+		System.out.println("Reasoning!");
 		try {
 		//	running= true;
 			
 			while (isRunning()) {
 				// calls the Jason engine to perform one reasoning cycle
-				//logger.fine("Agent "+getAgName()+" is reasoning....");
 				getTS().reasoningCycle();
-                
-		//		if (getTS().canSleep()) {
-         //       	sleep();
-		//		}
-				
-				/* while(!this.agentState.reasoningComplete()) {	// Replace this with wait() / notify() technique
-					sleep();
-				}*/
-				
 			}
-			//logger.fine("Agent "+getAgName()+" stopped.");
 		} catch (Exception e) {
-			//logger.log(Level.SEVERE, "Run error", e);
 			System.out.println(e.toString());
 		}
-	}
-	
-	//public String getAgName() {
-	//	return name;
-	//}
-	
-	/**
-     * Check if there is fresh data to perceive. Don't want to read the same perception data more than once
-     * @return
-     *
-	boolean checkForFreshPerception() {
-		boolean freshData = false;		// Return flag - default is false (perception is not fresh)
-		double currentPerceptId = agentState.getLatestPerceptionTimeStamp();
-    	
-		// Is this the first time perceiving? Is the perception ID different from the last perception?
-		if ((this.firstPerception) || (currentPerceptId != this.lastPerceptionId)) {
-			this.firstPerception = false;	// No longer the first perception
-			freshData = true;				// There is fresh data
-			this.lastPerceptionId = currentPerceptId;	// Update the perception ID
-			logger.fine("Agent "+ getAgName() + " has fresh perception at "+ this.lastPerceptionId );
-		} else
-			logger.fine("Agent "+ getAgName() + " has STALE perception at "+ this.lastPerceptionId );
-
-		// Return the result
-		return freshData;
+		System.out.println("Reasoned!");
 	}
 	
 	// this method just add some perception for the agent
 	@Override
 	public List<Literal> perceive() {
-		
+		List<Literal> litteralList = new ArrayList<Literal>();
+		litteralList.add(Literal.parseLiteral("fact(5)"));
 		// This line will need to go away once the SIM side handles this.
 		//agentState.buildSnapshot();
 		
 		// Get the perceptions from agentState
-		PerceptionSnapshot currentPerceptions = new PerceptionSnapshot(this.agentState.getPerceptions(this.lastPerceptionId));
-		this.lastPerceptionId = currentPerceptions.getLatestTimeStamp();
+		//PerceptionSnapshot currentPerceptions = new PerceptionSnapshot(this.agentState.getPerceptions(this.lastPerceptionId));
+		//this.lastPerceptionId = currentPerceptions.getLatestTimeStamp();
 		
 		// Update the history, get the list of literals to send to the agent
-		List<Literal> perceptionLiterals = new ArrayList<Literal>(this.perceptHistory.updatePerceptions(currentPerceptions));
+		//List<Literal> perceptionLiterals = new ArrayList<Literal>(this.perceptHistory.updatePerceptions(currentPerceptions));
 		
-		logger.log(Level.FINE, "Agent " + getAgName() + " Perceiving perception "+ this.lastPerceptionId);
-		logger.log(Level.FINE, perceptionLiterals.toString());
+		//logger.log(Level.FINE, "Agent " + getAgName() + " Perceiving perception "+ this.lastPerceptionId);
+		//logger.log(Level.FINE, perceptionLiterals.toString());
 		
 		// Write the perceptions to the perception logfile
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(this.perceptionLogFile, true));
-			for (Literal current : perceptionLiterals) {
-				writer.append(current.toString() + " ");
-			}
-			writer.newLine();
-			writer.close();
-		} catch (IOException e) {
+		//try {
+		//	BufferedWriter writer = new BufferedWriter(new FileWriter(this.perceptionLogFile, true));
+		//	for (Literal current : perceptionLiterals) {
+		//		writer.append(current.toString() + " ");
+		//	}
+		//	writer.newLine();
+		//	writer.close();
+		//} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//e.printStackTrace();
+		//}
 		
 		
-		long currentSystemTime = System.currentTimeMillis();
-		long simulationCycleTime = currentSystemTime - this.lastCycleTimeStamp;
-		this.lastCycleTimeStamp = currentSystemTime;
+		//long currentSystemTime = System.currentTimeMillis();
+		//long simulationCycleTime = currentSystemTime - this.lastCycleTimeStamp;
+		//this.lastCycleTimeStamp = currentSystemTime;
 		
 		// Write the timestamp to the timestamp logfile
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(this.timeStampFile, true));
-			writer.append((new Long(simulationCycleTime)).toString());
-			writer.newLine();
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		return perceptionLiterals;
+		//try {
+		//	BufferedWriter writer = new BufferedWriter(new FileWriter(this.timeStampFile, true));
+		//	writer.append((new Long(simulationCycleTime)).toString());
+		//	writer.newLine();
+		//	writer.close();
+		//} catch (IOException e) {
+		//	// TODO Auto-generated catch block
+		//	e.printStackTrace();
+		//}
+
+		return litteralList;
 	}
 	
 	/**
 	 * This method gets the agent actions. This is called back by the agent code
-	 *
+	 */
 	@Override
 	public void act(ActionExec action) {
+		System.out.println(action.toString());
+
 		// Get the action term
-		Structure actionTerm = action.getActionTerm();
+		//Structure actionTerm = action.getActionTerm();
 		
 		// Log the action
 		//getTS().getLogger().info("Agent " + getAgName() + " is doing: " + actionTerm);
 		//logger.log(Level.FINE, "MYAgent " + getAgName() + " is doing: " + actionTerm);
 		
 		// Define the action string
-		String actionString = "";
+		//String actionString = "";
 		
 		// Define terms for possible actions (should move these to private class parameters)
-		Term left = Literal.parseLiteral("turn(left)");
-		Term right = Literal.parseLiteral("turn(right)");
-		Term go = Literal.parseLiteral("thrust(on)");
-		Term stop = Literal.parseLiteral("thrust(off)");
-		Term up = Literal.parseLiteral("thrust(up)");
-		Term down = Literal.parseLiteral("thrust(down)");
-		Term hover = Literal.parseLiteral("hover");
+		//Term left = Literal.parseLiteral("turn(left)");
+		//Term right = Literal.parseLiteral("turn(right)");
+		//Term go = Literal.parseLiteral("thrust(on)");
+		//Term stop = Literal.parseLiteral("thrust(off)");
+		//Term up = Literal.parseLiteral("thrust(up)");
+		//Term down = Literal.parseLiteral("thrust(down)");
+		//Term hover = Literal.parseLiteral("hover");
 		
         
 		// Check what action is being performed, update actionString accordingly.
-		if (actionTerm.equals(left)) {
-			actionString = "turn(left)";
-		}
-		else if (actionTerm.equals(right)) 
-			actionString = "turn(right)";
-		else if (actionTerm.equals(go)) 
-			actionString = "thrust(on)";
-		else if (actionTerm.equals(stop))
-			actionString = "thrust(off)";
-		else if (actionTerm.equals(up))
-			actionString = "thrust(up)";
-		else if (actionTerm.equals(down))
-			actionString = "thrust(down)";
-		else if (actionTerm.equals(hover))
-			actionString = "hover";
+		//if (actionTerm.equals(left)) {
+		//	actionString = "turn(left)";
+		//}
+		//else if (actionTerm.equals(right))
+		//	actionString = "turn(right)";
+		//else if (actionTerm.equals(go))
+		//	actionString = "thrust(on)";
+		//else if (actionTerm.equals(stop))
+		//	actionString = "thrust(off)";
+		//else if (actionTerm.equals(up))
+		//	actionString = "thrust(up)";
+		//else if (actionTerm.equals(down))
+		//	actionString = "thrust(down)";
+		//else if (actionTerm.equals(hover))
+		//	actionString = "hover";
 		
 		// Add the action to agentState
 		//agentState.addAction(actionString);
-		System.out.println(actionString);
+		//System.out.println(actionString);
 		
 		// Set that the execution was OK and flag it as complete.
 		action.setResult(true);
