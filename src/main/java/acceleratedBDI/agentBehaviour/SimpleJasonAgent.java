@@ -114,6 +114,7 @@ public class SimpleJasonAgent extends AgArch {
 		}
 
 		//Collection<Literal> returnList = super.getPercepts(ag);
+		System.out.println("Perception: " + literalList.toString());
 		return literalList;
 	}
 	
@@ -122,11 +123,10 @@ public class SimpleJasonAgent extends AgArch {
 	 */
 	@Override
 	public void act(ActionExec action) {
-		System.out.println(action.toString());
+		System.out.println("Action: " + action.toString());
 
 		// Set that the execution was OK and flag it as complete.
 		action.setResult(true);
 		actionExecuted(action);
 	}
-
 }
