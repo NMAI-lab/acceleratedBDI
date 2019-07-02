@@ -38,7 +38,7 @@ public class SimpleJasonAgent extends AgArch {
 
 		// Set up the Jason agent
 		try {
-			Agent ag = new Agent();
+			Agent ag = new PIM_Agent();
 			new TransitionSystem(ag, null, null, this);
 			InputStream aslFile = ResourceManager.getResourceStream("/asl/" + "test" + ".asl");
 			ag.initAg();
@@ -93,6 +93,7 @@ public class SimpleJasonAgent extends AgArch {
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
+		this.stop();
 	}
 	
 	// this method just add some perception for the agent
