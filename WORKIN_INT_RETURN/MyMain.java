@@ -1,6 +1,6 @@
 class MyMain{
 
-	public native void cfxn();
+	public native int cfxn();
 	static
 	{
 		System.loadLibrary("cfxn");
@@ -9,8 +9,7 @@ class MyMain{
 	public static void main(String[] args)
 	{
 		MyMain hello= new MyMain();
-		int a=hello.cfxn(3);
-		System.out.println("RESULT:");
+		int a=hello.cfxn();
 		System.out.println(a);
 	}
 

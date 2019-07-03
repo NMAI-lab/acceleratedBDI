@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     MyMain
  * Method:    cfxn
- * Signature: ()V
+ * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_MyMain_cfxn
-  (JNIEnv *, jobject, jint);
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }
